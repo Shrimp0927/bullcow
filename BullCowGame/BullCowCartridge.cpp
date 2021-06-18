@@ -9,22 +9,22 @@ void UBullCowCartridge::BeginPlay() // When the game starts
 
 void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
 {
-    ClearScreen();
-    if (bGameOver == 1) {
-        GameOver();
-    }
-    if (HiddenWord == Input) {
-        PrintLine(TEXT("W"));
-        bGameOver = 1;
+    if (bGameOver) {
+        ClearScreen();
+        InitGame();
     } else {
-        Lives--;
-        if (Lives > 0) {
-            PrintLine(TEXT("guess again"));
+        ClearScreen();
+        if (HiddenWord == Input) {
+            PrintLine(TEXT("W"));
+            GameOver();
         } else {
-            PrintLine(TEXT("L"));
-            ClearScreen();
-            PrintLine(TEXT("Press enter to continue"));
-            bGameOver = 1;
+            Lives--;
+            if (Lives > 0) {
+                PrintLine(TEXT("try again \n%i lives remaining"), Lives);
+            } else {
+                PrintLine(TEXT("L"));
+                GameOver();
+            }
         }
     }
 }
@@ -39,6 +39,6 @@ void UBullCowCartridge::InitGame() {
 }
 
 void UBullCowCartridge::GameOver() {
-    ClearScreen();
-    InitGame();
+    bGameOver = 1;
+    PrintLine(TEXT("Enter to play again..."));
 }
